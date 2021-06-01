@@ -6,11 +6,12 @@ use App\Repository\ArtistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Utils\PersistableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ArtistRepository::class)
  */
-class Artist
+class Artist implements PersistableEntity
 {
     /**
      * @ORM\Id

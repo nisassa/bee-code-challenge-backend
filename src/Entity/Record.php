@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\RecordRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Utils\PersistableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=RecordRepository::class)
  */
-class Record
+class Record implements PersistableEntity
 {
     /**
      * @ORM\Id
@@ -94,5 +95,15 @@ class Record
         $this->price = $price;
 
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'price' => $this->price,
+            'artist' => $this->artist->getName(),
+        ];
     }
 }
