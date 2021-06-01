@@ -39,6 +39,44 @@ class RecordManager extends ManagerMain
         $this->persist($record);
     }
 
+    public function search(array $data): array
+    {
+        $repository = $this->em->getRepository(Record::class);
+
+        $query = $repository
+                    ->createQueryBuilder('r')
+                    ->join('r.artist', 'a');
+
+
+        if (isset($data['id']) and ! empty($data['id'])) {
+            $query
+                ->where('r.id = :recordId')
+                ->setParameter('recordId', $data['name'])
+            ;
+        } else if (isset($data['name']) and ! empty($data['name'])) {
+            $query
+                ->where('r.name = :recordId')
+                ->setParameter('recordId', $data['name'])
+            ;
+        } else if (isset($data['artist']['id']) and ! empty($data['artist']['id'])) {
+            $query
+                ->where('a.id = :artistId')
+                ->setParameter('artistId', $data['artist']['id'])
+            ;
+        } else if (isset($data['artist']['name']) and ! empty($data['artist']['name'])) {
+            $query
+                ->where('a.name = :artistName')
+                ->setParameter('artistName', $data['artist']['name'])
+            ;
+        } else {
+            return [];
+        }
+
+        $query = $query->orderBy("a.name", 'ASC')->getQuery();
+
+        return  $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
     /**
      * @param array $data
      * @param Artist $artist
